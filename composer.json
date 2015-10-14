@@ -1,0 +1,23 @@
+{
+  "name": "tburschka/composer-environment-injector",
+  "description": "Composer script injecting your environment variables",
+  "keywords": ["environment variable management"],
+  "homepage": "https://github.com/tburschka/composer-environment-injector",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Torsten Burschka",
+      "email": "torsten.burschka@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.3",
+    "symfony/yaml": "~2.0"
+  },
+  "require-dev": {
+    "composer/composer": "1.0.*@dev"
+  },
+  "autoload": {
+    "psr-4": { "ComposerEnvironmentInjector\\": "" }
+  }
+}
