@@ -114,7 +114,7 @@ class Processor
             if (!$this->overwrite && getenv($encodedEnv)) {
                 continue;
             }
-            putenv($this->encodeEnvironment($parameterName, $parameterName, true));
+            putenv($this->encodeEnvironment($parameterName, $parameterValue, true));
         }
     }
 
