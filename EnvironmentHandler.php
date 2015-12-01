@@ -2,7 +2,6 @@
 
 namespace ComposerEnvironmentInjector;
 
-
 use Composer\Script\Event;
 
 class EnvironmentHandler
@@ -31,7 +30,6 @@ class EnvironmentHandler
             if (!is_array($config)) {
                 throw new \InvalidArgumentException('The extra.environment-injector setting must be an array of configuration objects.');
             }
-
             $processor->processFile($config);
         }
     }

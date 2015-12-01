@@ -34,11 +34,18 @@ class Processor
     private $yamlParser;
 
 
+    /**
+     * Processor constructor.
+     * @param IOInterface $io
+     */
     public function __construct(IOInterface $io)
     {
         $this->io = $io;
     }
 
+    /**
+     * @param $config
+     */
     public function processFile($config)
     {
         $this->processConfig($config);
@@ -46,31 +53,44 @@ class Processor
         $this->putEnvironment();
     }
 
+    /**
+     * Processes the config
+     *
+     * @param array $config
+     */
     private function processConfig(array $config)
     {
         if (empty($config['env'])) {
-            throw new \InvalidArgumentException('The extra.environment-injector.env setting is required to use this environment handler.');
+            throw new \InvalidArgumentException(
+                'The extra.environment-injector.env setting is required to use this environment handler.'
+            );
         } elseif (getenv($config['env'])) {
             $config['env'] = getenv($config['env']);
         } // no else
 
         $this->file = str_replace('{env}', $config['env'], $config['source']);
         if (empty($config['source'])) {
-            throw new \InvalidArgumentException('The extra.environment-injector.file setting is required to use this environment handler.');
+            throw new \InvalidArgumentException(
+                'The extra.environment-injector.file setting is required to use this environment handler.'
+            );
         } elseif (!is_file($this->file)) {
-            throw new \InvalidArgumentException(sprintf('The environment file "%s" does not exist. Validate your settings.', $this->file));
+            throw new \InvalidArgumentException(
+                sprintf('The environment file "%s" does not exist. Validate your settings.', $this->file)
+            );
         } // no else
 
         if ($config['prefix']) {
             $this->prefix = $config['prefix'];
-        }
+        } // no else
 
         if ($config['overwrite']) {
             $this->overwrite = (bool) $config['overwrite'];
-        }
+        } // no else
     }
 
     /**
+     * Load a yaml file
+     *
      * @param $file
      * @return array
      */
@@ -86,6 +106,8 @@ class Processor
     }
 
     /**
+     * Get the yaml parser
+     *
      * @return Yaml\Parser
      */
     private function getYamlParser()
@@ -96,7 +118,14 @@ class Processor
         return $this->yamlParser;
     }
 
-
+    /**
+     * Encode environment parameter
+     *
+     * @param $parameterName
+     * @param $parameterValue
+     * @param bool|true $encodeValue
+     * @return string
+     */
     private function encodeEnvironment($parameterName, $parameterValue, $encodeValue = true)
     {
         $encodedEnv = $this->prefix . strtoupper($parameterName);
@@ -106,6 +135,9 @@ class Processor
         return $encodedEnv;
     }
 
+    /**
+     * Put the environment
+     */
     private function putEnvironment()
     {
         $parameters = $this->loadYaml($this->file);
