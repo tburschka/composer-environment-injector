@@ -15,9 +15,13 @@
     "symfony/yaml": "~2.3|~3.0"
   },
   "require-dev": {
-    "composer/composer": "1.0.*@dev"
+    "composer/composer": "1.0.*@dev",
+    "phpunit/phpunit": "@stable"
   },
   "autoload": {
-    "psr-4": { "ComposerEnvironmentInjector\\": "" }
+    "psr-4": { "ComposerEnvironmentInjector\\": "src" }
+  },
+  "autoload-dev": {
+    "psr-4": { "Test\\": "tests" }
   }
 }

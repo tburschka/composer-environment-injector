@@ -24,6 +24,11 @@ class Processor
     private $overwrite = false;
 
     /**
+     * @var bool
+     */
+    private $verbose = false;
+
+    /**
      * @var string
      */
     private $file;
@@ -86,6 +91,10 @@ class Processor
         if ($config['overwrite']) {
             $this->overwrite = (bool) $config['overwrite'];
         } // no else
+
+        if ($config['verbose']) {
+            $this->verbose = (bool) $config['verbose'];
+        } // no else
     }
 
     /**
@@ -99,6 +108,9 @@ class Processor
         $yaml = file_get_contents($file);
         try {
             $content = $this->getYamlParser()->parse($yaml, true);
+            if ($this->verbose) {
+                $this->io->write(sprintf('<info>File "%s" loaded.</info>', $file));
+            }
         } catch (\Exception $e) {
             throw new \UnexpectedValueException($e->getMessage(), $e->getCode(), $e);
         }
@@ -144,9 +156,20 @@ class Processor
         foreach ($parameters['parameters'] as $parameterName => $parameterValue) {
             $encodedEnv = $this->encodeEnvironment($parameterName, $parameterValue, false);
             if (!$this->overwrite && getenv($encodedEnv)) {
+                if ($this->verbose) {
+                    $this->io->write(sprintf(
+                        '<info>Skipped existing parameter "%s" with value "%s" (exiting value: "%s").</info>',
+                        $parameterName,
+                        $parameterValue,
+                        getenv($encodedEnv)
+                    ));
+                }
                 continue;
             }
             putenv($this->encodeEnvironment($parameterName, $parameterValue, true));
+            if ($this->verbose) {
+                $this->io->write(sprintf('<info>Set parameter "%s" to "%s".</info>', $parameterName, $parameterValue));
+            }
         }
     }
 
